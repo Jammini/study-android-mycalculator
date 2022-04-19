@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import java.lang.ArithmeticException
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onDigit(view: View) {
-//        Toast.makeText(this,"click", Toast.LENGTH_LONG).show()
         tvInput?.append((view as Button).text)
         lastNumeric = true
         lastDot = false
@@ -33,10 +33,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onDecimalPoint(view: View) {
-        if (lastNumeric && !lastDot){
+        if (lastNumeric && !lastDot) {
             tvInput?.append(".")
             lastNumeric = false
             lastDot = true
+        }
+
+    }
+
+    fun onOperator(view: View) {
+        tvInput?.text?.let {
+            if (lastNumeric && !isOperatorAdded(it.toString())) {
+                tvInput?.append((view as Button).text)
+                lastNumeric = false
+                lastDot = false
+            }
+        }
+    }
+
+    private fun isOperatorAdded(value: String): Boolean {
+
+        return if (value.startsWith("-")) {
+            false
+        } else {
+            value.contains("/") || value.contains("*")
+                    || value.contains("+") || value.contains("-")
         }
 
     }
